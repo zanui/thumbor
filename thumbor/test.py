@@ -25,18 +25,23 @@ class HelloMoreHandler(Handler):
     def get(self):
         return "Hello more"
 
-URL = (
-    (r'/', HelloWorldHandler),
-    (r'/more', HelloMoreHandler)
-)
+URL = [
+    [r'^/$', HelloWorldHandler],
+    [r'^/more$', HelloMoreHandler]
+]
 
 def dispatch(environ, start_response):
     for url in URL:
-        if re.match(url[0], environ['PATH_INFO']):
+        if url[0].match(environ['PATH_INFO']):
             return url[1]().process_request(environ, start_response)
 
     start_response('404', [('content-type', 'text/html')])
     return ''
 
-listener = eventlet.listen(('0.0.0.0', 7002))
-wsgi.server(listener, dispatch)
+listener = eventlet.listen(('0.0.0.0', 7000))
+try:
+    for url in URL:
+        url[0] = re.compile(url[0])
+    wsgi.server(listener, dispatch, log=None)
+finally:
+    listener.close()
