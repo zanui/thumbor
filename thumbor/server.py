@@ -15,6 +15,9 @@ import logging
 import tornado.ioloop
 from tornado.httpserver import HTTPServer
 
+from eventlet import wsgi, websocket
+import eventlet
+
 from thumbor import __version__
 from thumbor.app import ThumborServiceApp
 
@@ -86,23 +89,23 @@ def run_app(ip, port, conf, log_level, app):
 
     logging.basicConfig(level=getattr(logging, log_level.upper()))
 
-    if app:
-        try:
-            application = __import_class(app)(conf)
-        except Exception, err:
-            raise RuntimeError('Could not import your custom application "%s" because of error: %s' % (app, str(err)))
-    else:
-        application = ThumborServiceApp(conf)
+    #if app:
+        #try:
+            #application = __import_class(app)(conf)
+        #except Exception, err:
+            #raise RuntimeError('Could not import your custom application "%s" because of error: %s' % (app, str(err)))
+    #else:
+        #application = ThumborServiceApp(conf)
 
-    server = HTTPServer(application)
-    server.bind(port, ip)
-    server.start()
+    #server = HTTPServer(application)
+    #server.bind(port, ip)
+    #server.start()
 
-    try:
-        tornado.ioloop.IOLoop.instance().start()
-    except KeyboardInterrupt:
-        print
-        print "-- thumbor closed by user interruption --"
+    #try:
+        #tornado.ioloop.IOLoop.instance().start()
+    #except KeyboardInterrupt:
+        #print
+        #print "-- thumbor closed by user interruption --"
 
 if __name__ == "__main__":
     main()
