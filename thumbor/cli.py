@@ -8,12 +8,7 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 
-from thumbor.handlers.eventlet.base import Handler
-from thumbor.cli import Cli
+class Cli(object):
 
-class HealthCheckHandler(Handler):
-
-    def get(self):
-        cli = Cli()
-        return cli.health_check()
-
+    def health_check(self):
+        return 'working'

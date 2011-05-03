@@ -13,21 +13,12 @@ import optparse
 import logging
 
 from thumbor import __version__
+from thumbor.utils import real_import
 
 ip = "0.0.0.0"
 port = 8888
 conf = None
 server = None
-
-def __real_import(name):
-    if not '.' in name:
-        raise ImportError("You must specify the app class in the format <namespace>.<namespace2>.<clasname>")
-
-    module = __import__(name)
-    if '.' in name:
-        module = reduce(getattr, name.split('.')[1:], module)
-
-    return module
 
 #def __kill_server():
     #print 'stopping server...'
@@ -98,7 +89,7 @@ def run_app(ip, port, conf, log_level, app):
         #print "-- thumbor closed by user interruption --"
 
     try:
-        application = __real_import(app)
+        application = real_import(app)
     except Exception, err:
         raise RuntimeError('Could not import your custom application "%s" because of error: %s' % (app, str(err)))
 
@@ -106,9 +97,9 @@ def run_app(ip, port, conf, log_level, app):
         'verbose': False,
         'host': ip,
         'port': port,
-        'processes': 4,
-        'threads': 10,
-        'reload': True
+        'processes': 1,
+        'threads': 30,
+        'reload': False
     }
 
     application.run(options)
