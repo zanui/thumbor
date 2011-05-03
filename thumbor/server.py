@@ -12,49 +12,39 @@ import signal
 import optparse
 import logging
 
-import tornado.ioloop
-from tornado.httpserver import HTTPServer
-
-from eventlet import wsgi, websocket
-import eventlet
-
 from thumbor import __version__
-from thumbor.app import ThumborServiceApp
 
 ip = "0.0.0.0"
 port = 8888
 conf = None
 server = None
 
-def __import_class(name):
+def __real_import(name):
     if not '.' in name:
         raise ImportError("You must specify the app class in the format <namespace>.<namespace2>.<clasname>")
 
-    module_name = '.'.join(name.split('.')[:-1])
-    klass = name.split('.')[-1]
+    module = __import__(name)
+    if '.' in name:
+        module = reduce(getattr, name.split('.')[1:], module)
 
-    module = __import__(module_name)
-    if '.' in module_name:
-        module = reduce(getattr, module_name.split('.')[1:], module)
+    return module
 
-    return getattr(module, klass)
+#def __kill_server():
+    #print 'stopping server...'
+    #server.stop()
+    #ioloop = tornado.ioloop.IOLoop.instance()
+    #ioloop.stop()
+    #ioloop._stopped = False
 
-def __kill_server():
-    print 'stopping server...'
-    server.stop()
-    ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.stop()
-    ioloop._stopped = False
+#def handle_sigterm(signum, frame):
+    #__kill_server()
+    #print "server stopped"
 
-def handle_sigterm(signum, frame):
-    __kill_server()
-    print "server stopped"
+#def handle_sighup(signum, frame):
+    #__kill_server()
 
-def handle_sighup(signum, frame):
-    __kill_server()
-
-    print 'restarting server...'
-    run_app(ip, port, conf)
+    #print 'restarting server...'
+    #run_app(ip, port, conf)
 
 def main():
     '''Runs thumbor server with the specified arguments.'''
@@ -68,14 +58,14 @@ def main():
     parser.add_option("-i", "--ip", dest="ip", default="0.0.0.0", help = "The host address to run this thumbor instance at [default: %default]." )
     parser.add_option("-c", "--conf", dest="conf", default="", help = "The path of the configuration file to use for this thumbor instance [default: %default]." )
     parser.add_option("-l", "--log-level", dest="log_level", default="warning", help = "The log level to be used. Possible values are: debug, info, warning, error, critical or notset. [default: %default]." )
-    parser.add_option("-a", "--app", dest="app", default=None, help = "A custom app to use for this thumbor server in case you subclassed ThumborServiceApp [default: %default]." )
+    parser.add_option("-a", "--app", dest="app", default='thumbor.handlers.eventlet.app', help = "A custom app to use for this thumbor server in case you subclassed ThumborServiceApp [default: %default]." )
 
     (options, args) = parser.parse_args()
 
-    if not signal.getsignal(signal.SIGHUP):
-        signal.signal(signal.SIGHUP, handle_sighup)
-    if not signal.getsignal(signal.SIGTERM):
-        signal.signal(signal.SIGTERM, handle_sigterm)
+    #if not signal.getsignal(signal.SIGHUP):
+        #signal.signal(signal.SIGHUP, handle_sighup)
+    #if not signal.getsignal(signal.SIGTERM):
+        #signal.signal(signal.SIGTERM, handle_sigterm)
 
     port = options.port
     ip = options.ip
@@ -106,6 +96,22 @@ def run_app(ip, port, conf, log_level, app):
     #except KeyboardInterrupt:
         #print
         #print "-- thumbor closed by user interruption --"
+
+    try:
+        application = __real_import(app)
+    except Exception, err:
+        raise RuntimeError('Could not import your custom application "%s" because of error: %s' % (app, str(err)))
+
+    options = {
+        'verbose': False,
+        'host': ip,
+        'port': port,
+        'processes': 4,
+        'threads': 10,
+        'reload': True
+    }
+
+    application.run(options)
 
 if __name__ == "__main__":
     main()

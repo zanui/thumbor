@@ -8,10 +8,14 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 
-from thumbor.handlers.eventlet.base import Handler
+import re
 
-class HealthCheckHandler(Handler):
+from thumbor.handlers.eventlet.healthcheck import HealthCheckHandler
 
-    def get(self):
-        return 'working'
+URLS = (
+    [r'/healthcheck', HealthCheckHandler],
+)
+
+for url in URLS:
+    url[0] = re.compile(url[0])
 
