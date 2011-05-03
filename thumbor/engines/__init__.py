@@ -8,9 +8,7 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 
-import math
-
-from tornado.options import options
+from thumbor.config import conf
 
 class BaseEngine(object):
 
@@ -29,15 +27,15 @@ class BaseEngine(object):
 
     def normalize(self):
         width, height = self.size
-        if width > options.MAX_WIDTH or height > options.MAX_HEIGHT:
-            width_diff = width - options.MAX_WIDTH
-            height_diff = height - options.MAX_HEIGHT
-            if options.MAX_WIDTH and width_diff > height_diff:
-                height = self.get_proportional_height(options.MAX_WIDTH)
-                self.resize(options.MAX_WIDTH, height)
-            elif options.MAX_HEIGHT and height_diff > width_diff:
-                width = self.get_proportional_width(options.MAX_HEIGHT)
-                self.resize(width, options.MAX_HEIGHT)
+        if width > conf.MAX_WIDTH or height > conf.MAX_HEIGHT:
+            width_diff = width - conf.MAX_WIDTH
+            height_diff = height - conf.MAX_HEIGHT
+            if conf.MAX_WIDTH and width_diff > height_diff:
+                height = self.get_proportional_height(conf.MAX_WIDTH)
+                self.resize(conf.MAX_WIDTH, height)
+            elif conf.MAX_HEIGHT and height_diff > width_diff:
+                width = self.get_proportional_width(conf.MAX_HEIGHT)
+                self.resize(width, conf.MAX_HEIGHT)
 
     def get_proportional_width(self, new_height):
         width, height = self.size

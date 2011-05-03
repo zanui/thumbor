@@ -9,40 +9,39 @@
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 
 import sys
-import os
 
-import eventlet
-eventlet.monkey_patch()
-
-from spawning.spawning_controller import start_controller
+import spawning.spawning_controller as controller
+from eventlet.greenthread import spawn
 
 from thumbor.handlers.eventlet.urls import URLS
+from thumbor.config import conf
+from thumbor.options import parse_config_file
 
 def dispatcher(environ, start_response):
-    for url in URLS:
-        if url[0].match(environ['PATH_INFO']):
-            return url[1]().process_request(environ, start_response)
+    def get_response(environ, start_response):
+        for url in URLS:
+            match = url[0].match(environ['PATH_INFO'])
+            if match:
+                return url[1]().process_request(environ, start_response, **match.groupdict())
 
-    start_response('404', [('content-type', 'text/html')])
-    return ''
+        start_response('404', [('content-type', 'text/html')])
+        return ''
+    func = spawn(get_response, environ, start_response)
+    result = func.wait()
+    return result
 
-def run(options):
-    sock = None
-
-    os.setpgrp()
-
+def run(conf_path):
+    parse_config_file(conf_path)
     factory = 'spawning.wsgi_factory.config_factory'
 
     factory_args = {
-        'verbose': options['verbose'],
-        'host': options['host'],
-        'port': options['port'],
-        #'num_processes': options['processes'],
-        #'threadpool_workers': options['threads'],
-        'num_processes': 1,
-        'threadpool_workers': 4,
+        'verbose': conf.VERBOSE,
+        'host': conf.HOST,
+        'port': conf.PORT,
+        'num_processes': conf.PROCESSES,
+        'threadpool_workers': conf.THREADS,
         'watch': None,
-        'reload': options['reload'],
+        'reload': conf.AUTO_RELOAD,
         'deadman_timeout': 10,
         'access_log_file': None,
         'pidfile': None,
@@ -53,7 +52,7 @@ def run(options):
         'argv_str': " ".join(sys.argv[1:]),
         'args': ['thumbor.handlers.eventlet.app.dispatcher'],
         'status_port': None,
-        'status_host': options['host']
+        'status_host': conf.HOST
     }
 
-    start_controller(sock, factory, factory_args)
+    controller.start_controller(None, factory, factory_args)

@@ -11,9 +11,9 @@
 from cStringIO import StringIO
 
 from PIL import Image
-from tornado.options import options
 
 from thumbor.engines import BaseEngine
+from thumbor.config import conf
 
 FORMATS = {
     '.jpg': 'JPEG',
@@ -44,7 +44,7 @@ class Engine(BaseEngine):
     def flip_horizontally(self):
         self.image = self.image.transpose(Image.FLIP_LEFT_RIGHT)
 
-    def read(self, extension=None, quality=options.QUALITY):
+    def read(self, extension=None, quality=conf.QUALITY):
         #returns image buffer in byte format.
         img_buffer = StringIO()
 

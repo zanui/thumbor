@@ -11,7 +11,15 @@
 from os.path import join
 import tempfile
 
-from tornado.options import options, define
+from thumbor.options import options, define
+
+
+define('VERBOSE', type=bool, default=False)
+define('HOST', type=str, default='0.0.0.0')
+define('PORT', type=int, default=8888)
+define('PROCESSES', type=int, default=4)
+define('THREADS', type=int, default=4)
+define('AUTO_RELOAD', type=bool, default=False)
 
 define('MAX_WIDTH', type=int, default=0)
 define('MAX_HEIGHT', type=int, default=0)

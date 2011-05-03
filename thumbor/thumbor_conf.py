@@ -8,6 +8,18 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 
+VERBOSE = False
+
+HOST = '0.0.0.0'
+
+PORT = 8888
+
+PROCESSES = 4
+
+THREADS = 20
+
+AUTO_RELOAD = True
+
 # the domains that can have their images resized
 # use an empty list for allow all sources
 #ALLOWED_SOURCES = ['mydomain.com']

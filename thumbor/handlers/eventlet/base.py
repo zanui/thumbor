@@ -18,8 +18,8 @@ class Handler(object):
     def get(self):
         return ''
 
-    def process_request(self, environ, start_response):
-        func = spawn(self.get)
+    def process_request(self, environ, start_response, *args, **kw):
+        func = spawn(self.get, *args, **kw)
         result = func.wait()
 
         start_response(str(self.status_code), [('content-type', self.content_type)])

@@ -10,15 +10,9 @@
 
 import re
 from urlparse import urlparse
-
-import tornado.httpclient
+import urllib2
 
 from thumbor.config import conf
-
-http = tornado.httpclient.AsyncHTTPClient()
-
-def fetch(url, callback):
-    http.fetch(url, callback=callback)
 
 def _normalize_url(url):
     return url if url.startswith('http') else 'http://%s' % url
@@ -41,14 +35,10 @@ def validate(url):
         #actual = 0
     #return (float(actual) / 1024) <= max_size
 
-def load(url, callback):
-    #if conf.MAX_SOURCE_SIZE and not verify_size(url, conf.MAX_SOURCE_SIZE):
-        #return None
-
-    def return_contents(response):
-        if response.error: callback(None)
-        callback(response.body)
-
+def load(url):
     url = _normalize_url(url)
-    fetch(url, callback=return_contents)
+    usock = urllib2.urlopen(url)
+    actual = usock.read()
 
+    import ipdb;ipdb.set_trace()
+    return actual

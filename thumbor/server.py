@@ -8,6 +8,7 @@
 # http://www.opensource.org/licenses/mit-license
 # Copyright (c) 2011 globo.com timehome@corp.globo.com
 
+from os.path import abspath, join, dirname
 import signal
 import optparse
 import logging
@@ -93,16 +94,8 @@ def run_app(ip, port, conf, log_level, app):
     except Exception, err:
         raise RuntimeError('Could not import your custom application "%s" because of error: %s' % (app, str(err)))
 
-    options = {
-        'verbose': False,
-        'host': ip,
-        'port': port,
-        'processes': 1,
-        'threads': 30,
-        'reload': False
-    }
-
-    application.run(options)
+    conf_path = conf or join(dirname(__file__), 'thumbor_conf.py')
+    application.run(abspath(conf_path))
 
 if __name__ == "__main__":
     main()

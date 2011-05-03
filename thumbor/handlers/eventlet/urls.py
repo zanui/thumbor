@@ -10,10 +10,12 @@
 
 import re
 
-from thumbor.handlers.eventlet.healthcheck import HealthCheckHandler
+from thumbor.url import Url
+from thumbor.handlers.eventlet.handlers import HealthCheckHandler, UnsafeHandler
 
 URLS = (
     [r'/healthcheck', HealthCheckHandler],
+    [Url.regex(with_unsafe=True, include_image=True), UnsafeHandler]
 )
 
 for url in URLS:
