@@ -16,13 +16,15 @@ import color
 class Image(object):
     ''' Represents a single image, supported by a MagickWand.'''
 
-    def __init__(self, image=None, type=None):
+    def __init__(self, image=None, type=None, buffer=None):
         self._wand = api.NewMagickWand()
 
         if type:
             api.MagickSetFilename(self._wand, 'buffer.%s' % type)  # hint image type
 
-        if hasattr(image, 'read'):
+        if buffer:
+            self._check_wand_error(api.MagickReadImageBlob(self._wand, buffer, len(buffer)))
+        elif hasattr(image, 'read'):
             c = image.read()
             self._check_wand_error(api.MagickReadImageBlob(self._wand, c, len(c)))
         elif image:

@@ -16,7 +16,7 @@ import tornado.ioloop
 from tornado.options import parse_config_file
 
 from thumbor.config import conf
-from thumbor.handlers.unsafe import MainHandler
+from thumbor.handlers.unsafe import MainHandler, ImagingHandler
 from thumbor.handlers.healthcheck import HealthcheckHandler
 from thumbor.handlers.crypto import CryptoHandler
 from thumbor.utils import real_import, logger
@@ -54,12 +54,12 @@ class ThumborServiceApp(tornado.web.Application):
         }
 
         handlers = [
-            (r'/healthcheck', HealthcheckHandler)
+            (r'/healthcheck', HealthcheckHandler),
         ]
 
         if conf.ALLOW_UNSAFE_URL:
             handlers.append(
-                (Url.regex(), MainHandler, handler_context),
+                (Url.regex(), ImagingHandler, handler_context)
             )
 
         if custom_handlers:

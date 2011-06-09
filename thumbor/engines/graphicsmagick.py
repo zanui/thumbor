@@ -14,10 +14,10 @@ from pgmagick import Image, Geometry, Blob, FilterTypes
 from thumbor.engines import BaseEngine
 
 FORMATS = {
-    '.jpg': 'JPEG',
-    '.jpeg': 'JPEG',
-    '.gif': 'RGBA',
-    '.png': 'PNG'
+    'jpg': 'JPEG',
+    'jpeg': 'JPEG',
+    'gif': 'RGBA',
+    'png': 'PNG'
 }
 
 class Engine(BaseEngine):
@@ -65,7 +65,7 @@ class Engine(BaseEngine):
                              #'HermiteFilter', 'LanczosFilter', 'MitchellFilter',
                              #'PointFilter', 'QuadraticFilter', 'SincFilter', 'TriangleFilter']
 
-        f = FilterTypes.CatromFilter
+        f = FilterTypes.CubicFilter
 
         self.image.filterType(f)
 

@@ -17,10 +17,10 @@ from thumbor.vendor.pythonmagickwand.image import Image
 from thumbor.vendor.pythonmagickwand import wand
 
 FORMATS = {
-    '.jpg': 'JPEG',
-    '.jpeg': 'JPEG',
-    '.gif': 'GIF',
-    '.png': 'PNG'
+    'jpg': 'JPEG',
+    'jpeg': 'JPEG',
+    'gif': 'GIF',
+    'png': 'PNG'
 }
 
 class Engine(BaseEngine):
@@ -29,7 +29,7 @@ class Engine(BaseEngine):
         self.load(self.read(), self.extension)
 
     def create_image(self, buffer):
-        return Image(StringIO(buffer))
+        return Image(buffer=buffer)
 
     def resize(self, width, height):
         self.image.resize((int(width), int(height)), wand.CATROM_FILTER, 1)

@@ -16,10 +16,10 @@ from tornado.options import options
 from thumbor.engines import BaseEngine
 
 FORMATS = {
-    '.jpg': 'JPEG',
-    '.jpeg': 'JPEG',
-    '.gif': 'GIF',
-    '.png': 'PNG'
+    'jpg': 'JPEG',
+    'jpeg': 'JPEG',
+    'gif': 'GIF',
+    'png': 'PNG'
 }
 
 class Engine(BaseEngine):
