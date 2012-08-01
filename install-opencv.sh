@@ -3,10 +3,10 @@ cd ./opencv
 wget ftp://ftp.videolan.org/pub/videolan/x264/snapshots/last_stable_x264.tar.bz2
 tar xjf last_stable_x264.tar.bz2
 rm last_stable_x264.tar.bz2
-cd last_stable_x264
+cd x264*
 ./configure --enable-static && make && sudo make install
 cd ..
-rm -rf last_stable_x264
+rm -rf x264*
 
 wget http://ffmpeg.org/releases/ffmpeg-0.11.1.tar.gz
 tar xzf ffmpeg-0.11.1.tar.gz

@@ -3,10 +3,13 @@ python:
   - "2.7"
 
 install:
-    #removing unwanted packages
-    - sudo apt-get remove --purge -y $(< unwanted_packages)
+    - sudo apt-get autoremove -y
+
     # update aptitude
     - sudo apt-get update -y
+
+    #removing unwanted packages
+    - sudo apt-get remove --purge -y $(< unwanted_packages)
 
 
     # install aptitude packages
@@ -14,7 +17,9 @@ install:
 
     - sudo apt-get autoremove -y
 
-    - df -h
+    #cleaning packages cache
+    - sudo apt-get clean -y
+
 
     # weird travis-ci python paths
     - export PYTHONPATH=$PYTHONPATH:/usr/lib/pymodules/python2.7/
@@ -37,8 +42,6 @@ script:
 
     # install opencv
     - ./install-opencv.sh
-
-    - df -h
 
     # finally run tests
     - make ci_test
