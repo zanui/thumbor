@@ -16,6 +16,7 @@ from thumbor.handlers.images import ImagesHandler
 from thumbor.handlers.image import ImageHandler
 from thumbor.url import Url
 from thumbor.handlers.imaging import ImagingHandler
+from thumbor.handlers.awesome import AwesomeHandler
 
 
 class ThumborServiceApp(tornado.web.Application):
@@ -42,6 +43,10 @@ class ThumborServiceApp(tornado.web.Application):
             handlers.append(
                 (r'/image/(.*)', ImageHandler, {'context': self.context})
             )
+
+        handlers.append(
+            (r'/awesome/(.*)', AwesomeHandler, {'context': self.context})
+        )
 
         # Imaging handler (GET)
         handlers.append(
