@@ -36,7 +36,6 @@ install:
 
     # install python requirements
     - make setup
-    - pip uninstall -y PIL
 
 script:
     # finally run tests
