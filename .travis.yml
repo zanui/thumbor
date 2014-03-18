@@ -34,6 +34,7 @@ install:
     - tar xvzf libwebp-0.4.0.tar.gz
     - cd libwebp-0.4.0 && ./configure --enable-libwebpmux --enable-libwebpdemux --enable-libwebpdecoder && make && sudo make install; cd ..
 
+    - pip uninstall -y PIL
     # install python requirements
     - make setup
 
