@@ -43,7 +43,6 @@ class CryptoVows(Vows.Context):
                                   height=300,
                                   smart=True,
                                   adaptive=False,
-                                  full=False,
                                   fit_in=False,
                                   flip_horizontal=True,
                                   flip_vertical=True,
@@ -158,7 +157,6 @@ BASE_PARAMS = {
     'height': 0,
     'smart': False,
     'adaptive': False,
-    'full': False,
     'fit_in': False,
     'flip_horizontal': False,
     'flip_vertical': False,
@@ -198,7 +196,6 @@ DECRYPT_TESTS = [
             'filters': '',
             'debug': False,
             'adaptive': False,
-            'full' : False,
             'trim': None
         }
     },
@@ -227,7 +224,6 @@ DECRYPT_TESTS = [
             'filters': 'quality(20):brightness(10)',
             'debug': False,
             'adaptive': False,
-            'full' : False,
             'trim': None
         }
     }

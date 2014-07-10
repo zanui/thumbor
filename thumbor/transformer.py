@@ -289,14 +289,10 @@ class Transformer(object):
             self.target_width = self.target_height
             self.target_height = tmp
 
-        sign = 1
-        if self.context.request.full:
-            sign = -1
-
-        if sign == 1 and self.target_width >= source_width and self.target_height >= source_height:
+        if self.target_width >= source_width and self.target_height >= source_height:
             return
-		
-        if source_width / self.target_width * sign >= source_height / self.target_height * sign:
+
+        if source_width / self.target_width >= source_height / self.target_height:
             resize_height = round(source_height * self.target_width / source_width)
             resize_width = self.target_width
         else:
