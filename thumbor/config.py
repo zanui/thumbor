@@ -218,6 +218,13 @@ Config.define(
 )
 
 Config.define(
+    'JPEGOPTIM_PATH',
+    '/usr/bin/jpegoptim',
+    'Path for the jpegoptim binary',
+    'Optimizers'
+)
+
+Config.define(
     'FFMPEG_PATH',
     '/usr/local/bin/ffmpeg',
     'Path for the ffmpeg binary used to generate gifv(h.264)',
