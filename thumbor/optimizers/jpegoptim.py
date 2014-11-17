@@ -22,7 +22,7 @@ class Optimizer(BaseOptimizer):
         jpegoptim_path = self.context.config.JPEGOPTIM_PATH
         shutil.copy2(input_file, output_file)
         command = '%s --strip-all %s' % (
-            jpegtran_path,
+            jpegoptim_path,
             output_file
         )
         os.system(command)
